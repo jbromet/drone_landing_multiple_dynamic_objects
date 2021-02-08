@@ -6,6 +6,19 @@ This project aims at improving the detection of dynamic objects from a UAV in a 
 
 --- 
 
+## Content of repository
+
+* UAV Dataset: 
+   * dataset_preparation.py prepares the different folders from the UAV dataset for training. 
+* Unity/Delivery Scenario: contains assets, scenes, samples used in my scenario. 
+* Annotations Convertors: 
+   * Unity_to_VOC.py: 
+   * Results_json_to_VOC.py:
+* Evaluation : 
+   * map_calculation.py: 
+
+---
+
 ## Table of Contents
 * [Building a simulated drone scenario with Unity ](#building-a-simulated-drone-scenario-with-Unity)
     * [First steps with Unity](#first-steps-with-Unity)
@@ -47,7 +60,7 @@ The images are delivered in the form of frames annotated with ground truth.
 
 ### Convert Unity annotations to VOC format txt 
 
-The annotations from Unity are gathered in different .json files called "captures.json". To convert these anotations to a VOC normalized format, run the script drone_landing_multiple_dynamic_objects/Convertors/Unity_to_VOC.py.
+The annotations from Unity are gathered in different .json files called "captures.json". To convert these anotations to a VOC normalized format, run the script drone_landing_multiple_dynamic_objects/Annotations Convertors/Unity_to_VOC.py.
 
 ---
 
@@ -59,7 +72,8 @@ The UAV123 Dataset was used to fine-tune YOLO using images taken at different al
 
 1. Download the complete UAV123 & UAV20L datasets [here](https://cemse.kaust.edu.sa/ivul/uav123).
 2. For "low images" and pedestrians only: select the 8th and 19th folder. For "high" images and pedestrians only: select the 4th, 7th and 10th folder. Any other folders that match a low altitude or high altitude point of view can be chosen. 
-3. Run the script _drone_landing_multiple_dynamic_objects/UAV Dataset/data_preparation.py script to classify, rename and merge folders for the training. 
+3. Run the script drone_landing_multiple_dynamic_objects/UAV Dataset/data_preparation.py script to classify, rename and merge folders for the training. 
+> Run to install pillow package : py -m pip install pillow 
 4. Create a Roboflow account and follow this [tutorial](https://blog.roboflow.com/training-yolov4-on-a-custom-dataset/) to prepare the data for training. 
 - Create three datasets on Roboflow (low, high, all heights) and upload the annotations as well. The previous data_preparation.py script takes care of converting the annotations format already.
 - Split dataset into 25% Validation, 75% Training, testing beind done using Unity pictures. 
@@ -89,15 +103,15 @@ My google Colab follows the tutorial and the [Colab](https://colab.research.goog
 3. __Define helper functions__ 
 4. __Create 3 folders__ : "low", "high" and "all" in the same folder where you have cloned Darknet. 
 5. Do these steps for __each of the training set__ : 
-  *5a. Set up Custom Dataset for YOLOv4 : here copy the zip link from Roboflow. 
-  *5b. Change name of files according to wich dataset. Example: %cp train/*.jpg data/obj/_high_/
-  *5c. Change number of classes in obj.data if needed
-  *5d. Change backup folder in obj.data accordingly
+   *5a. Set up Custom Dataset for YOLOv4 : here copy the zip link from Roboflow. 
+   *5b. Change name of files according to wich dataset. Example: %cp train/*.jpg data/obj/_high_/
+   *5c. Change number of classes in obj.data if needed
+   *5d. Change backup folder in obj.data accordingly
 6. __Write custom cfg file__: Modify the darknet/cfg/yolov4-obj.cfg following [this](https://github.com/AlexeyAB/darknet#how-to-train-to-detect-your-custom-objects) or this [video](https://www.youtube.com/watch?v=mmj3nxGT2YQ&t=1121s&ab_channel=TheAIGuy) from minute 20:00. 
 7. __Train__ with a learning rate of 0.001. Set up a smaller one once you reach overfitting. Train three times. Weights are saved in the backup folder. 
 8. __Infer Custom Objects with Saved YOLOv4 Weights__: 
-  *8a. Infer on pictures: for each testing set, detect using the 4 models (3 saved weights + yolov4.weights for COCO module). Then merge each individual .json result into one global .json results file. 
-  *8b. Infer on videos: same process. Download the videos afterwards locally. 
+   *8a. Infer on pictures: for each testing set, detect using the 4 models (3 saved weights + yolov4.weights for COCO module). Then merge each individual .json result into one global .json results file. 
+   *8b. Infer on videos: same process. Download the videos afterwards locally. 
 9. Evaluate Performance with mAP: 
 
   
