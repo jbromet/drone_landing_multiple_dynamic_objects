@@ -15,7 +15,9 @@ This project aims at improving the detection of dynamic objects from a UAV in a 
    * Unity_to_VOC.py: 
    * Results_json_to_VOC.py:
 * Evaluation : 
-   * map_calculation.py: 
+   * Select_testing_images.py
+ * Others: 
+   * create_video_from_frames.py (requires opencv). 
 
 ---
 
@@ -93,7 +95,7 @@ Relevant and important information about Darknet can be found [here](https://git
 
 When using Google Colab, you don't need to install anything. All the packages are already included. To run Darknet locally, follow the link above. 
 
-### Testing and training 
+### Training and testing
 
 See my [Google Colab](https://colab.research.google.com/drive/16brlfnQlRp286mXA2jOtmoqpGB48QOzO?usp=sharing) for training and testing. 
 My google Colab follows the tutorial and the [Colab](https://colab.research.google.com/drive/1mzL6WyY9BRx4xX476eQdhKDnd_eixBlG#scrollTo=GNVU7eu9CQj3) of Roboflow, check it out for more information. 
@@ -110,9 +112,12 @@ My google Colab follows the tutorial and the [Colab](https://colab.research.goog
 6. __Write custom cfg file__: Modify the darknet/cfg/yolov4-obj.cfg following [this](https://github.com/AlexeyAB/darknet#how-to-train-to-detect-your-custom-objects) or this [video](https://www.youtube.com/watch?v=mmj3nxGT2YQ&t=1121s&ab_channel=TheAIGuy) from minute 20:00. 
 7. __Train__ with a learning rate of 0.001. Set up a smaller one once you reach overfitting. Train three times. Weights are saved in the backup folder. 
 8. __Infer Custom Objects with Saved YOLOv4 Weights__: 
-   *8a. Infer on pictures: for each testing set, detect using the 4 models (3 saved weights + yolov4.weights for COCO module). Then merge each individual .json result into one global .json results file. 
-   *8b. Infer on videos: same process. Download the videos afterwards locally. 
+   *8a. Create 3 datasets testing_low, testing_high and testing_moving and upload images on Google Drive.  You can choose a subset of images instead of 1000 images dataset obtained with Simulation Scenario on Unity
+   *8b. Infer on pictures: for each testing set, detect using the 4 models (3 saved weights + yolov4.weights for COCO module). Then merge each individual .json result into one global .json results file. 
+   *8c. Infer on videos: same process. Download the videos afterwards locally. 
 9. Evaluate Performance with mAP: 
+    *9a. Run script Annotations Convertor/Results_json_to_VOC.py to convert detection results in the right format. 
+    *9b. Select the groung truth associated with the subset of images, run Evaluation/Select_testing_images.py
 
   
 
